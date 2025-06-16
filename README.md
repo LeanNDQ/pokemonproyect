@@ -1,48 +1,50 @@
-# Astro Starter Kit: Basics
+-
+----------------------------------------------------------------------------------------------------------
+🧪 Proyecto Semanal CROBF - PokeDex API
 
-```sh
-npm create astro@latest -- --template basics
-```
+Objetivo: Recuperar la práctica constante, perderle el miedo al código y construir algo concreto y visual en poco tiempo.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+🎯 Desafío:
+Crear una página web simple y atractiva con Astro que consuma la API pública de PokéAPI y muestre información de Pokémon.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+📦 Requisitos técnicos: 
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+Usar Astro como framework base
 
-## 🚀 Project Structure
+Consumir la PokéAPI para obtener información de Pokémon
 
-Inside of your Astro project, you'll see the following folders and files:
+ Mostrar al menos: 
+- Imagen
+- Nombre
+- Tipo/s
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+Diseño limpio, presentable, adaptable a mobile
 
-## 🧞 Commands
+Estilos personalizados (no usar un template copiado tal cual)
 
-All commands are run from the root of the project, from a terminal:
+🔧 Extras:(no opcionales)
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+- Agregar búsqueda por nombre
+- Agregar un loader mientras carga la info
+- Agregar paginación
+- Implementar componente reutilizable para cada Pokémon
 
-## 👀 Want to learn more?
+🗓 Plazo de entrega: 
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Lunes Próximo
+Entrega por repositorio en Github + Deploy
+
+✅ ¿Qué buscamos con esto?
+
+Que se enfrenten al código sin miedo
+
+Que vean un resultado visual rápido
+
+Que empiecen a trabajar con APIs reales
+
+Que aprendan haciendo, aunque no salga perfecto
+
+
+Esto no es un examen. Es una práctica para probar, romper cosas, arreglar, equivocarse y construir.
+----------------------------------------------------------------------------------------------------------

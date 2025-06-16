@@ -1,14 +1,19 @@
 {
-  "name": "pokemonproyect",
+  "name": "pokemon-pokedex",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
+    "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "astro": "^5.9.3"
+  },
+  "devDependencies": {
+    "@astrojs/ts-plugin": "^1.0.0",
+    "typescript": "^5.0.0"
   }
 }

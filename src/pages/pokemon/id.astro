@@ -1,0 +1,248 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { fetchPokemon, getTypeColor } from '../../utils/api';
+import type { Pokemon } from '../../utils/api';
+
+const { id } = Astro.params;
+
+let pokemon: Pokemon | null = null;
+let error = '';
+
+if (!id) {
+  return Astro.redirect('/');
+}
+
+try {
+  pokemon = await fetchPokemon(id);
+} catch (e) {
+  error = `No se pudo encontrar el Pokémon "${id}"`;
+}
+
+if (!pokemon) {
+  return Astro.redirect('/?error=' + encodeURIComponent(error));
+}
+
+const imageUrl = pokemon.sprites.other?.['official-artwork']?.front_default || pokemon.sprites.front_default;
+---
+
+<Layout title={`${pokemon.name} - PokeDex`}>
+  <div class="container">
+    <div class="back-button">
+      <a href="/">← Volver al PokeDex</a>
+    </div>
+    
+    <div class="pokemon-detail">
+      <div class="pokemon-header">
+        <div class="pokemon-image-large">
+          <img src={imageUrl} alt={pokemon.name} />
+        </div>
+        <div class="pokemon-basic-info">
+          <h1 class="pokemon-name">{pokemon.name}</h1>
+          <p class="pokemon-id">#{pokemon.id.toString().padStart(3, '0')}</p>
+          <div class="pokemon-types">
+            {pokemon.types.map((type) => (
+              <span 
+                class="type-badge" 
+                style={`background-color: ${getTypeColor(type.type.name)}`}
+              >
+                {type.type.name}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+      
+      <div class="pokemon-stats-grid">
+        <div class="stat-card">
+          <h3>Información Básica</h3>
+          <div class="stat-item">
+            <span class="stat-label">Altura:</span>
+            <span class="stat-value">{(pokemon.height / 10).toFixed(1)}m</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Peso:</span>
+            <span class="stat-value">{(pokemon.weight / 10).toFixed(1)}kg</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <h3>Sprites</h3>
+          <div class="sprites-grid">
+            {pokemon.sprites.front_default && (
+              <img src={pokemon.sprites.front_default} alt={`${pokemon.name} frontal`} />
+            )}
+            {pokemon.sprites.back_default && (
+              <img src={pokemon.sprites.back_default} alt={`${pokemon.name} trasero`} />
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .back-button {
+    margin-bottom: 20px;
+  }
+
+  .back-button a {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 12px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .back-button a:hover {
+    background: #ffcc02;
+    transform: translateY(-2px);
+  }
+
+  .pokemon-detail {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .pokemon-header {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    align-items: center;
+  }
+
+  .pokemon-image-large {
+    flex-shrink: 0;
+  }
+
+  .pokemon-image-large img {
+    width: 250px;
+    height: 250px;
+    object-fit: contain;
+  }
+
+  .pokemon-basic-info {
+    flex: 1;
+  }
+
+  .pokemon-name {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    color: #333;
+    text-transform: capitalize;
+  }
+
+  .pokemon-id {
+    font-size: 1.5rem;
+    color: #666;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+
+  .pokemon-types {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .type-badge {
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: capitalize;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .pokemon-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .stat-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .stat-card h3 {
+    margin: 0 0 15px 0;
+    color: #333;
+    font-size: 1.3rem;
+  }
+
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .stat-item:last-child {
+    border-bottom: none;
+  }
+
+  .stat-label {
+    font-weight: bold;
+    color: #555;
+  }
+
+  .stat-value {
+    color: #333;
+    font-weight: bold;
+  }
+
+  .sprites-grid {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .sprites-grid img {
+    width: 96px;
+    height: 96px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    padding: 5px;
+  }
+
+  @media (max-width: 768px) {
+    .pokemon-header {
+      flex-direction: column;
+      text-align: center;
+      gap: 20px;
+    }
+
+    .pokemon-image-large img {
+      width: 200px;
+      height: 200px;
+    }
+
+    .pokemon-name {
+      font-size: 2rem;
+    }
+
+    .pokemon-detail {
+      padding: 20px;
+    }
+
+    .pokemon-stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

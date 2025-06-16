@@ -1,0 +1,90 @@
+---
+---
+
+<div class="search-container">
+  <input 
+    type="text" 
+    id="pokemon-search" 
+    placeholder="Busca tu Pokémon por su nombre" 
+    class="search-input"
+  />
+  <button id="search-btn" class="search-btn">🔍</button>
+</div>
+
+<script>
+  const searchInput = document.getElementById('pokemon-search') as HTMLInputElement;
+  const searchBtn = document.getElementById('search-btn') as HTMLButtonElement;
+
+  function performSearch() {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    if (searchTerm) {
+      window.location.href = `/pokemon/${searchTerm}`;
+    }
+  }
+
+  searchBtn.addEventListener('click', performSearch);
+  
+  searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      performSearch();
+    }
+  });
+</script>
+
+<style>
+  .search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    gap: 10px;
+  }
+
+  .search-input {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    width: 300px;
+    font-size: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    outline: none;
+    transition: transform 0.2s;
+  }
+
+  .search-input:focus {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  }
+
+  .search-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 50%;
+    background: #ffcc02;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .search-btn:hover {
+    transform: scale(1.1);
+    background: #ffd700;
+  }
+
+  @media (max-width: 768px) {
+    .search-input {
+      width: 250px;
+    }
+    
+    .search-container {
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+  }
+</style>

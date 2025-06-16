@@ -1,0 +1,124 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PokemonCard from '../components/PokemonCard.astro';
+import Pagination from '../components/Pagination.astro';
+import Loader from '../components/Loader.astro';
+import { fetchPokemonList, fetchPokemon, getPokemonIdFromUrl } from '../utils/api';
+import type { Pokemon } from '../utils/api';
+
+const url = Astro.url;
+const currentPage = parseInt(url.searchParams.get('page') || '1');
+const pokemonPerPage = 20;
+const offset = (currentPage - 1) * pokemonPerPage;
+
+let pokemonList: Pokemon[] = [];
+let totalPages = 1;
+let isLoading = true;
+let error = '';
+
+try {
+  const response = await fetchPokemonList(offset, pokemonPerPage);
+  totalPages = Math.ceil(response.count / pokemonPerPage);
+  
+  // Fetch detailed info for each Pokemon
+  const pokemonPromises = response.results.map(async (pokemon) => {
+    const id = getPokemonIdFromUrl(pokemon.url);
+    return fetchPokemon(id);
+  });
+  
+  pokemonList = await Promise.all(pokemonPromises);
+  isLoading = false;
+} catch (e) {
+  error = 'Error al cargar los Pokémon. Por favor, intenta de nuevo.';
+  isLoading = false;
+}
+---
+
+<Layout title="Lista de Pokémon - PokeDex">
+  <div class="container">
+    <div class="back-button">
+      <a href="/">← Volver al Menú</a>
+    </div>    <h1>📚 Lista de Pokémon</h1>
+    <p class="page-subtitle">Página {currentPage} de {totalPages}</p>
+    
+    {isLoading && <Loader />}
+    
+    {error && (
+      <div class="error-message">
+        {error}
+      </div>
+    )}
+    
+    {!isLoading && !error && (
+      <>
+        <div class="pokemon-grid">
+          {pokemonList.map((pokemon) => (
+            <PokemonCard pokemon={pokemon} />
+          ))}
+        </div>
+        
+        <Pagination 
+          currentPage={currentPage} 
+          totalPages={totalPages}
+          baseUrl="/pokedex"
+        />
+      </>
+    )}
+  </div>
+</Layout>
+
+<style>
+  .back-button {
+    margin-bottom: 20px;
+  }
+
+  .back-button a {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 12px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .back-button a:hover {
+    background: #ffcc02;
+    transform: translateY(-2px);
+  }
+  .page-subtitle {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    font-weight: 300;
+  }
+
+  .debug-info {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    font-weight: 300;
+  }
+
+  .error-message {
+    background: rgba(244, 67, 54, 0.9);
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin: 20px 0;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 768px) {
+    .page-subtitle {
+      font-size: 1rem;
+    }
+  }
+</style>
